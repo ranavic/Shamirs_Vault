@@ -11,4 +11,5 @@ export default defineConfig({
       protocolImports: true,
     }),
   ],
+  base: '/Shamirs_Vault',
 })
