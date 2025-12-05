@@ -74,13 +74,44 @@ const EncryptionPanel = () => {
 
             {result && (
                 <div className="result-box">
-                    <label>Encrypted Vault (Public Safe)</label>
-                    <div className="share-item">{result.vault}</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <label>Encrypted Vault (Public Safe)</label>
+                        <button
+                            onClick={() => navigator.clipboard.writeText(result.vault)}
+                            style={{ padding: '2px 8px', fontSize: '0.8rem' }}
+                        >
+                            Copy Vault
+                        </button>
+                    </div>
+                    <div className="share-item" style={{ wordBreak: 'break-all' }}>{result.vault}</div>
 
-                    <label style={{ marginTop: '1rem' }}>Key Shares (Distribute These)</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+                        <label>Key Shares (Distribute These)</label>
+                        <button
+                            onClick={() => {
+                                const data = JSON.stringify(result, null, 2);
+                                const blob = new Blob([data], { type: 'application/json' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'shamirs-vault-kit.json';
+                                a.click();
+                                URL.revokeObjectURL(url);
+                            }}
+                            style={{ padding: '4px 12px', fontSize: '0.9rem', background: '#4CAF50', color: 'white', border: 'none' }}
+                        >
+                            Download Vault Kit (JSON)
+                        </button>
+                    </div>
                     {result.shares.map((share, idx) => (
-                        <div key={idx} className="share-item">
-                            Share #{idx + 1}: {share}
+                        <div key={idx} className="share-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+                            <span style={{ wordBreak: 'break-all', flex: 1, textAlign: 'left' }}>Share #{idx + 1}: {share}</span>
+                            <button
+                                onClick={() => navigator.clipboard.writeText(share)}
+                                style={{ padding: '2px 8px', fontSize: '0.8rem', flexShrink: 0, width: 'auto' }}
+                            >
+                                Copy
+                            </button>
                         </div>
                     ))}
                 </div>
